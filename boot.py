@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsView, QGraphicsScene, QGraphicsOpacityEffect
-from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QParallelAnimationGroup
+from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QParallelAnimationGroup, QUrl
 from PyQt5.QtSvg import QGraphicsSvgItem
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import os
 
 class BootSequence(QWidget):
@@ -9,6 +10,14 @@ class BootSequence(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
+        self.setup_audio()
+
+    def setup_audio(self):
+        self.player = QMediaPlayer()
+        sound_path = os.path.join("Media", "SFX", "boot.wav")
+        url = QUrl.fromLocalFile(os.path.abspath(sound_path))
+        self.player.setMedia(QMediaContent(url))
+        self.player.setVolume(100)
 
     def setup_ui(self):
         self.setStyleSheet("background-color: #000;")
@@ -49,6 +58,9 @@ class BootSequence(QWidget):
         layout.addWidget(self.view)
 
     def start_boot_sequence(self):
+        # Play boot sound
+        self.player.play()
+
         # Create parallel animation group for fade-in and zoom
         self.parallel_group = QParallelAnimationGroup()
 
