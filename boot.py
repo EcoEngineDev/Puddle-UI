@@ -1,108 +1,88 @@
-import sys
-from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QEasingCurve, pyqtSignal, QRect
-from PyQt5.QtGui import QFont, QFontDatabase
-from PyQt5.QtSvg import QSvgWidget
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsView, QGraphicsScene, QGraphicsOpacityEffect
+from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QParallelAnimationGroup
+from PyQt5.QtSvg import QGraphicsSvgItem
+import os
 
 class BootSequence(QWidget):
     boot_complete = pyqtSignal()
-    
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
-        self.animation_timer = QTimer()
-        self.animation_timer.timeout.connect(self.fade_to_main_ui)
-        
+
     def setup_ui(self):
-        # Set up the boot screen layout
-        layout = QVBoxLayout()
+        self.setStyleSheet("background-color: #000;")
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignCenter)
+
+        # Graphics scene/view for SVG
+        self.scene = QGraphicsScene(self)
+        self.view = QGraphicsView(self.scene, self)
+        self.view.setStyleSheet("background: transparent; border: none;")
+        self.view.setAlignment(Qt.AlignCenter)
+        self.view.setFixedSize(1600, 600)  # Adjust as needed
+        self.view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+        # SVG item
+        svg_path = os.path.join("Media", "mallard.svg")
+        self.svg_item = QGraphicsSvgItem(svg_path)
+        self.svg_item.setFlags(self.svg_item.ItemClipsToShape)
+        self.svg_item.setCacheMode(self.svg_item.NoCache)
+        self.svg_item.setZValue(0)
         
-        # Create MALLARD label
-        self.mallard_label = QLabel("MALLARD")
-        # Use style sheet to center the text
-        self.mallard_label.setStyleSheet("""
-            QLabel {
-                font-size: 72px;
-                font-weight: bold;
-                color: #007acc;
-                background-color: transparent;
-                text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
-                text-align: center;
-                qproperty-alignment: AlignCenter;
-            }
-        """)
+        # Center the SVG in the view
+        self.svg_item.setTransformOriginPoint(self.svg_item.boundingRect().center())
+        self.svg_item.setScale(4.0)
+        self.scene.addItem(self.svg_item)
         
-        # Set opacity to 0 initially
-        self.setWindowOpacity(0.0)
-        
-        layout.addWidget(self.mallard_label)
-        self.setLayout(layout)
-        
-        # Set background
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #000000;
-            }
-        """)
-    
+        # Center the scene on the SVG
+        self.scene.setSceneRect(self.svg_item.boundingRect())
+        self.view.centerOn(self.svg_item.boundingRect().center())
+
+        # Opacity effect for fade in/out
+        self.opacity_effect = QGraphicsOpacityEffect()
+        self.view.setGraphicsEffect(self.opacity_effect)
+        self.opacity_effect.setOpacity(0.0)
+
+        layout.addWidget(self.view)
+
     def start_boot_sequence(self):
-        """Start the boot animation sequence with zoom and fade effects"""
-        # Set initial opacity and scale
-        self.setWindowOpacity(0.0)
+        # Create parallel animation group for fade-in and zoom
+        self.parallel_group = QParallelAnimationGroup()
+
+        # 1. Fade in animation (700ms)
+        self.fade_in = QPropertyAnimation(self.opacity_effect, b"opacity")
+        self.fade_in.setDuration(700)
+        self.fade_in.setStartValue(0.0)
+        self.fade_in.setEndValue(1.0)
+        self.fade_in.setEasingCurve(QEasingCurve.InOutQuad)
+
+        # 2. Zoom animation (2500ms - covers both fade-in and continued zoom)
+        self.zoom_anim = QPropertyAnimation(self.svg_item, b"scale")
+        self.zoom_anim.setDuration(2500)
+        self.zoom_anim.setStartValue(4.0)
+        self.zoom_anim.setEndValue(4.8)
+        self.zoom_anim.setEasingCurve(QEasingCurve.OutCubic)
+
+        # Add both animations to parallel group
+        self.parallel_group.addAnimation(self.fade_in)
+        self.parallel_group.addAnimation(self.zoom_anim)
         
-        # Create zoom in animation using font size
-        self.zoom_animation = QPropertyAnimation(self.mallard_label, b"font")
-        self.zoom_animation.setDuration(2000)  # 2 seconds
-        
-        # Import QFont for font animation
-        from PyQt5.QtGui import QFont
-        
-        # Create font objects for animation
-        small_font = QFont("Arial", 24)  # Start small
-        large_font = QFont("Arial", 72)  # End large
-        
-        self.zoom_animation.setStartValue(small_font)
-        self.zoom_animation.setEndValue(large_font)
-        self.zoom_animation.setEasingCurve(QEasingCurve.OutQuad)
-        
-        # Fade in animation
-        self.fade_in_animation = QPropertyAnimation(self, b"windowOpacity")
-        self.fade_in_animation.setDuration(1500)  # 1.5 seconds
-        self.fade_in_animation.setStartValue(0.0)
-        self.fade_in_animation.setEndValue(1.0)
-        self.fade_in_animation.setEasingCurve(QEasingCurve.InOutQuad)
-        
-        # Connect animations
-        self.fade_in_animation.finished.connect(self.start_fade_out)
-        
-        # Start both animations
-        self.fade_in_animation.start()
-        self.zoom_animation.start()
-    
+        # Connect to start fade out after parallel animations complete
+        self.parallel_group.finished.connect(self.start_fade_out)
+        self.parallel_group.start()
+
     def start_fade_out(self):
-        """Start the fade out animation after a delay"""
-        # Wait for 2 seconds before starting fade out
-        QTimer.singleShot(2000, self.fade_out_mallard)
-    
-    def fade_out_mallard(self):
-        """Smoothly fade out the MALLARD text"""
-        self.fade_out_animation = QPropertyAnimation(self, b"windowOpacity")
-        self.fade_out_animation.setDuration(1500)  # 1.5 seconds for smoother fade
-        self.fade_out_animation.setStartValue(1.0)
-        self.fade_out_animation.setEndValue(0.0)
-        self.fade_out_animation.setEasingCurve(QEasingCurve.InOutQuad)
-        
-        # Connect fade out completion to main UI transition
-        self.fade_out_animation.finished.connect(self.complete_boot_sequence)
-        
-        # Start the fade out
-        self.fade_out_animation.start()
-    
+        # 3. Fade out
+        self.fade_out = QPropertyAnimation(self.opacity_effect, b"opacity")
+        self.fade_out.setDuration(900)
+        self.fade_out.setStartValue(1.0)
+        self.fade_out.setEndValue(0.0)
+        self.fade_out.setEasingCurve(QEasingCurve.InOutQuad)
+        self.fade_out.finished.connect(self.complete_boot_sequence)
+        self.fade_out.start()
+
     def complete_boot_sequence(self):
-        """Complete the boot sequence and signal main UI to show"""
         self.boot_complete.emit()
-    
-    def fade_to_main_ui(self):
-        """Fade transition to main UI"""
-        self.boot_complete.emit() 
