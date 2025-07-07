@@ -180,53 +180,19 @@ class MainUI(QWidget):
     def setup_ui(self):
         # Main layout
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(30)
-        main_layout.setContentsMargins(40, 40, 40, 40)
-        
-        # Title
-        title = QLabel("MALLARD")
-        title.setStyleSheet("""
-            font-size: 48px; 
-            font-weight: bold; 
-            color: #007acc; 
-            margin: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            qproperty-alignment: AlignCenter;
-        """)
-        main_layout.addWidget(title)
-        
-        # Button grid
-        button_grid = QGridLayout()
-        button_grid.setSpacing(20)
-        
-        # Create buttons with icons
-        buttons = [
-            ("Music", "Media/Icons/music-circle-svgrepo-com.svg"),
-            ("Map", "Media/Icons/map-svgrepo-com.svg"),
-            ("Audio", "Media/Icons/audio-square-svgrepo-com.svg"),
-            ("Settings", "Media/Icons/setting-2-svgrepo-com.svg"),
-            ("Volume", "Media/Icons/volume-high-svgrepo-com.svg"),
-            ("More", "Media/Icons/more-circle-svgrepo-com.svg")
-        ]
-        
-        for i, (text, icon_path) in enumerate(buttons):
-            button = SvgButton(icon_path, text)
-            if text == "Settings":
-                button.clicked.connect(self.car_interface.show_settings)
-            else:
-                button.clicked.connect(lambda checked, t=text: self.button_clicked(t))
-            
-            row = i // 3
-            col = i % 3
-            button_grid.addWidget(button, row, col)
-        
-        main_layout.addLayout(button_grid)
+        main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.addStretch()
+        
+        # Version label at the bottom
+        version_label = QLabel("Puddle Ver. 0.1 Alpha")
+        version_label.setStyleSheet("color: #888; font-size: 12px;")
+        version_label.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        main_layout.addWidget(version_label, alignment=Qt.AlignLeft | Qt.AlignBottom)
         
         self.setLayout(main_layout)
     
     def button_clicked(self, button_name):
-        print(f"{button_name} button clicked!")  # Placeholder functionality
+        pass  # No buttons in minimal UI
 
 class CarInterface(QMainWindow):
     def __init__(self):
