@@ -35,7 +35,7 @@ class BootSequence(QWidget):
         self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         # SVG item
-        svg_path = os.path.join("Media", "mallard.svg")
+        svg_path = os.path.join("Media", "MALLARD.svg")
         self.svg_item = QGraphicsSvgItem(svg_path)
         self.svg_item.setFlags(self.svg_item.ItemClipsToShape)
         self.svg_item.setCacheMode(self.svg_item.NoCache)
