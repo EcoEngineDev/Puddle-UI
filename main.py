@@ -8,9 +8,13 @@ from PyQt5.QtGui import QPainter
 from boot import BootSequence
 from speedometer import SpeedometerWidget
 from navbar import navWidget
-from map_widget import MapWidget
+from maps import MapsWidget
 from youtube import YouTubeWidget
 from movies import MoviesWidget
+from music_menu import MusicMenu
+from youtube_music import YouTubeMusicWidget
+from apple_music import AppleMusicWidget
+from soundcloud import SoundCloudWidget
 import os
 
 class EntertainmentMenu(QWidget):
@@ -96,7 +100,7 @@ class MainUI(QWidget):
         speedometer_layout.addStretch(1)
         content_layout.addWidget(speedometer_container, 0)
         
-        # Center container for entertainment menu and YouTube
+        # Center container for entertainment menu and web views
         center_container = QFrame()
         center_layout = QVBoxLayout(center_container)
         center_layout.setContentsMargins(0, 0, 0, 0)
@@ -111,17 +115,32 @@ class MainUI(QWidget):
         self.movies_widget = MoviesWidget()
         center_layout.addWidget(self.movies_widget)
         
+        # Add music menu and widgets
+        self.music_menu = MusicMenu()
+        center_layout.addWidget(self.music_menu)
+        
+        self.youtube_music_widget = YouTubeMusicWidget()
+        center_layout.addWidget(self.youtube_music_widget)
+        
+        self.apple_music_widget = AppleMusicWidget()
+        center_layout.addWidget(self.apple_music_widget)
+        
+        self.soundcloud_widget = SoundCloudWidget()
+        center_layout.addWidget(self.soundcloud_widget)
+        
         content_layout.addWidget(center_container, 1)
         
         # Connect entertainment buttons
         self.entertainment_menu.buttons["YouTube"].clicked.connect(self.show_youtube)
         self.entertainment_menu.buttons["Movies"].clicked.connect(self.show_movies)
         
-        # Spacer to push speedometer left when map is hidden
-        content_layout.addStretch(1)
-
+        # Connect music menu buttons
+        self.music_menu.buttons["YouTube Music"].clicked.connect(self.show_youtube_music)
+        self.music_menu.buttons["Apple Music"].clicked.connect(self.show_apple_music)
+        self.music_menu.buttons["SoundCloud"].clicked.connect(self.show_soundcloud)
+        
         # Right side with map
-        self.map_widget = MapWidget()
+        self.map_widget = MapsWidget()
         self.map_widget.hide()
         content_layout.addWidget(self.map_widget, 1)
 
@@ -162,12 +181,56 @@ class MainUI(QWidget):
     def show_youtube(self):
         self.entertainment_menu.hide()
         self.movies_widget.hide()
+        self.music_menu.hide()
+        self.youtube_music_widget.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.hide()
         self.youtube_widget.show()
 
     def show_movies(self):
         self.entertainment_menu.hide()
         self.youtube_widget.hide()
+        self.music_menu.hide()
+        self.youtube_music_widget.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.hide()
         self.movies_widget.show()
+
+    def show_music_menu(self):
+        self.entertainment_menu.hide()
+        self.youtube_widget.hide()
+        self.movies_widget.hide()
+        self.youtube_music_widget.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.hide()
+        self.music_menu.show()
+
+    def show_youtube_music(self):
+        self.entertainment_menu.hide()
+        self.youtube_widget.hide()
+        self.movies_widget.hide()
+        self.music_menu.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.hide()
+        self.youtube_music_widget.show()
+
+    def show_apple_music(self):
+        self.entertainment_menu.hide()
+        self.youtube_widget.hide()
+        self.movies_widget.hide()
+        self.music_menu.hide()
+        self.youtube_music_widget.hide()
+        self.soundcloud_widget.hide()
+        self.apple_music_widget.show()
+
+    def show_soundcloud(self):
+        self.entertainment_menu.hide()
+        self.youtube_widget.hide()
+        self.movies_widget.hide()
+        self.music_menu.hide()
+        self.youtube_music_widget.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.show()
 
     def handle_nav_button(self, button_name):
         # Hide all content first
@@ -175,12 +238,18 @@ class MainUI(QWidget):
         self.entertainment_menu.hide()
         self.youtube_widget.hide()
         self.movies_widget.hide()
+        self.music_menu.hide()
+        self.youtube_music_widget.hide()
+        self.apple_music_widget.hide()
+        self.soundcloud_widget.hide()
         
         # Show appropriate content based on button
         if button_name == "Maps":
             self.map_widget.show()
         elif button_name == "Games":
             self.entertainment_menu.show()
+        elif button_name == "Music":
+            self.music_menu.show()
         elif button_name == "Home":
             pass  # Just hide everything
 

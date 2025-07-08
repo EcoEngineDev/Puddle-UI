@@ -3,11 +3,11 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineS
 from PyQt5.QtCore import QUrl, QSize, Qt
 from keyboard import VirtualKeyboard
 
-class MoviesPage(QWebEnginePage):
+class SoundCloudPage(QWebEnginePage):
     def __init__(self, profile, parent=None):
         super().__init__(profile, parent)
         
-        # Enable all settings that might help bypass restrictions
+        # Enable all settings for music playback
         settings = self.settings()
         settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
         settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
@@ -23,39 +23,11 @@ class MoviesPage(QWebEnginePage):
         settings.setFontSize(QWebEngineSettings.DefaultFontSize, 16)
         settings.setFontSize(QWebEngineSettings.MinimumFontSize, 14)
 
-    def acceptNavigationRequest(self, url, _type, isMainFrame):
-        # Inject anti-frame-busting code
-        if isMainFrame:
-            script = """
-                // Override properties that could detect framing
-                try {
-                    Object.defineProperty(window, 'self', {
-                        get: function() { return window.top; }
-                    });
-                    Object.defineProperty(window, 'top', {
-                        get: function() { return window.self; }
-                    });
-                    Object.defineProperty(window, 'parent', {
-                        get: function() { return window.self; }
-                    });
-                    Object.defineProperty(window, 'frameElement', {
-                        get: function() { return null; }
-                    });
-                } catch(e) {}
-            """
-            self.runJavaScript(script)
-        return super().acceptNavigationRequest(url, _type, isMainFrame)
-
-    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
-        # Uncomment for debugging
-        # print(f"Console: {message} at line {lineNumber} in {sourceID}")
-        pass
-
-class MoviesWidget(QWidget):
+class SoundCloudWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Create custom profile with modified settings
-        self.profile = QWebEngineProfile("movie_profile")
+        self.profile = QWebEngineProfile("soundcloud_profile")
         self.profile.setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
         self.setup_ui()
         self.hide()  # Hidden by default
@@ -71,12 +43,12 @@ class MoviesWidget(QWidget):
         web_layout = QVBoxLayout(web_container)
         web_layout.setContentsMargins(0, 0, 0, 0)
         
-        # Create web view for Movies with touch-optimized page
+        # Create web view for SoundCloud
         self.web_view = QWebEngineView()
-        self.page = MoviesPage(self.profile, self.web_view)
+        self.page = SoundCloudPage(self.profile, self.web_view)
         self.web_view.setPage(self.page)
-        self.web_view.setUrl(QUrl("https://rivestream.org"))
-        self.web_view.setMinimumSize(QSize(1280, 768))  # Same size as YouTube
+        self.web_view.setUrl(QUrl("https://soundcloud.com"))
+        self.web_view.setMinimumSize(QSize(1280, 768))
         web_layout.addWidget(self.web_view)
         
         # Add virtual keyboard

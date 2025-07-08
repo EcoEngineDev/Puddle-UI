@@ -18,7 +18,7 @@ class BrowserWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    window = BrowserWindow("https://www.cineby.app")  # Change to your desired URL
+    window = BrowserWindow("https://tidal.com")  # Change to your desired URL
     window.show()
     sys.exit(app.exec_())
 
