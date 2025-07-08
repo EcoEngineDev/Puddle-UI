@@ -16,15 +16,14 @@ class MainUI(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        
+
         # Navigation bar at the top
         top_row = QVBoxLayout()
         top_row.setContentsMargins(0, 0, 0, 0)
 
         # nav wdiget home icon
         self.nav_widget = navWidget()
-        top_row.addWidget(self.nav_widget, alignment=Qt.AlignTop | Qt.AlignLeft)
-        top_row.setContentsMargins(120, 20, 0, 0)  # Offset from top and left
+        top_row.addWidget(self.nav_widget, alignment=Qt.AlignCenter | Qt.AlignTop)
         main_layout.addLayout(top_row)
         main_layout.addStretch()
 
