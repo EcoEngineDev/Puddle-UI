@@ -12,8 +12,22 @@ class MainUI(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
+        
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
+
+        
+        # Navigation bar at the top
+        top_row = QVBoxLayout()
+        top_row.setContentsMargins(0, 0, 0, 0)
+
+        # nav wdiget home icon
+        self.nav_widget = navWidget()
+        top_row.addWidget(self.nav_widget, alignment=Qt.AlignTop | Qt.AlignLeft)
+        top_row.setContentsMargins(120, 20, 0, 0)  # Offset from top and left
+        main_layout.addLayout(top_row)
+        main_layout.addStretch()
+
 
         # Speedometer in top left with offset
         self.speedometer = SpeedometerWidget()
@@ -25,15 +39,6 @@ class MainUI(QWidget):
         # Spacer to push bottom labels down
         main_layout.addStretch()
 
-        # Navigation bar at the top
-        top_row = QHBoxLayout()
-        top_row.setContentsMargins(0, 0, 0, 0)
-
-        # nav wdiget home icon
-        self.nav_widget = navWidget()
-        top_row.addWidget(self.nav_widget, alignment=Qt.AlignLeft | Qt.AlignTop)
-        main_layout.addLayout(top_row)
-        main_layout.addStretch()
 
         # Bottom row layout for version (left) and MALLARD (center)
         bottom_row = QHBoxLayout()
