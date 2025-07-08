@@ -1,5 +1,10 @@
 from __future__ import annotations  # Add this at the top
+import warnings
 import sys
+
+# Filter out all PyQt5 deprecation warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QStackedWidget, QPushButton, QHBoxLayout, QFrame, QGridLayout
 from PyQt5.QtCore import Qt, QRectF, QPoint, QSize
 from PyQt5.QtGui import QFontDatabase, QFont, QColor
@@ -15,17 +20,24 @@ from music_menu import MusicMenu
 from youtube_music import YouTubeMusicWidget
 from apple_music import AppleMusicWidget
 from soundcloud import SoundCloudWidget
+from intellectual_games_widget import IntellectualGamesWidget
 import os
 
 class EntertainmentMenu(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
-        self.hide()  # Hidden by default
 
     def setup_ui(self):
-        layout = QGridLayout()
-        layout.setSpacing(20)  # Space between buttons
+        # Main layout to center the grid
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Container for grid to allow centering
+        grid_container = QFrame()
+        grid_container.setStyleSheet("background: transparent;")
+        grid_layout = QGridLayout(grid_container)
+        grid_layout.setSpacing(20)  # Space between buttons
         
         # Button style
         button_style = """
@@ -55,14 +67,25 @@ class EntertainmentMenu(QWidget):
             btn = QPushButton(text)
             btn.setFont(QFont("Lexend Bold"))
             btn.setStyleSheet(button_style)
-            btn.setMinimumSize(QSize(200, 60))
+            btn.setFixedSize(QSize(250, 80))  # Fixed size for consistent layout
             row = i // 2  # 2 buttons per row
             col = i % 2
-            layout.addWidget(btn, row, col)
-            self.buttons[text] = btn  # Store button reference
+            grid_layout.addWidget(btn, row, col)
+            self.buttons[text] = btn
         
-        layout.setContentsMargins(50, 50, 50, 50)  # Add some padding around the grid
-        self.setLayout(layout)
+        # Center the grid in the widget
+        main_layout.addStretch(1)
+        main_layout.addWidget(grid_container)
+        main_layout.addStretch(1)
+        
+        # Center horizontally
+        container_layout = QHBoxLayout()
+        container_layout.addStretch(1)
+        container_layout.addLayout(main_layout)
+        container_layout.addStretch(1)
+        
+        self.setLayout(container_layout)
+        self.setStyleSheet("background-color: transparent;")
 
 class MainUI(QWidget):
     def __init__(self, parent=None):
@@ -70,22 +93,17 @@ class MainUI(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
+        # Main vertical layout for the entire UI
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
         # Navigation bar at the top
-        top_row = QVBoxLayout()
-        top_row.setContentsMargins(0, 0, 0, 0)
-        top_row.setSpacing(0)
-
-        # nav widget home icon
         self.nav_widget = navWidget()
         self.nav_widget.button_clicked_signal.connect(self.handle_nav_button)
-        top_row.addWidget(self.nav_widget)
-        main_layout.addLayout(top_row)
+        main_layout.addWidget(self.nav_widget)
 
-        # Main content container
+        # Content area (middle section)
         content_container = QFrame()
         content_layout = QHBoxLayout(content_container)
         content_layout.setContentsMargins(0, 0, 0, 0)
@@ -100,39 +118,42 @@ class MainUI(QWidget):
         speedometer_layout.addStretch(1)
         content_layout.addWidget(speedometer_container, 0)
         
-        # Center container for entertainment menu and web views
+        # Center container with stacked widget
         center_container = QFrame()
         center_layout = QVBoxLayout(center_container)
         center_layout.setContentsMargins(0, 0, 0, 0)
+        center_layout.setSpacing(0)
         
+        # Create stacked widget for content management
+        self.content_stack = QStackedWidget()
+        
+        # Create all widgets
         self.entertainment_menu = EntertainmentMenu()
-        center_layout.addWidget(self.entertainment_menu)
-        
-        # Add web-based widgets
         self.youtube_widget = YouTubeWidget()
-        center_layout.addWidget(self.youtube_widget)
-        
         self.movies_widget = MoviesWidget()
-        center_layout.addWidget(self.movies_widget)
-        
-        # Add music menu and widgets
         self.music_menu = MusicMenu()
-        center_layout.addWidget(self.music_menu)
-        
         self.youtube_music_widget = YouTubeMusicWidget()
-        center_layout.addWidget(self.youtube_music_widget)
-        
         self.apple_music_widget = AppleMusicWidget()
-        center_layout.addWidget(self.apple_music_widget)
-        
         self.soundcloud_widget = SoundCloudWidget()
-        center_layout.addWidget(self.soundcloud_widget)
+        self.intellectual_games_widget = IntellectualGamesWidget()
         
+        # Add widgets to stack
+        self.content_stack.addWidget(self.entertainment_menu)
+        self.content_stack.addWidget(self.youtube_widget)
+        self.content_stack.addWidget(self.movies_widget)
+        self.content_stack.addWidget(self.music_menu)
+        self.content_stack.addWidget(self.youtube_music_widget)
+        self.content_stack.addWidget(self.apple_music_widget)
+        self.content_stack.addWidget(self.soundcloud_widget)
+        self.content_stack.addWidget(self.intellectual_games_widget)
+        
+        center_layout.addWidget(self.content_stack)
         content_layout.addWidget(center_container, 1)
         
         # Connect entertainment buttons
         self.entertainment_menu.buttons["YouTube"].clicked.connect(self.show_youtube)
         self.entertainment_menu.buttons["Movies"].clicked.connect(self.show_movies)
+        self.entertainment_menu.buttons["Intellectual Games"].clicked.connect(self.show_intellectual_games)
         
         # Connect music menu buttons
         self.music_menu.buttons["YouTube Music"].clicked.connect(self.show_youtube_music)
@@ -141,11 +162,10 @@ class MainUI(QWidget):
         
         # Right side with map
         self.map_widget = MapsWidget()
-        self.map_widget.hide()
         content_layout.addWidget(self.map_widget, 1)
+        self.map_widget.hide()
 
-        main_layout.addWidget(content_container)
-        main_layout.addStretch(1)
+        main_layout.addWidget(content_container, 1)  # Give content area stretch
 
         # Bottom row with version and MALLARD text
         bottom_container = QFrame()
@@ -169,89 +189,63 @@ class MainUI(QWidget):
         mallard_font.setPixelSize(32)
         mallard_label.setFont(mallard_font)
         mallard_label.setStyleSheet("color: #FFFFFF; padding: 0 50px;")
+        mallard_label.setAlignment(Qt.AlignCenter)
         
         bottom_layout.addWidget(mallard_label)
-        bottom_layout.addWidget(QWidget(), 1)
+        bottom_layout.addWidget(QWidget(), 1)  # Spacer
 
         main_layout.addWidget(bottom_container)
 
         self.setLayout(main_layout)
         self.setStyleSheet("background-color: #000000;")
+        
+        # Show initial content
+        self.content_stack.setCurrentWidget(self.entertainment_menu)
 
     def show_youtube(self):
-        self.entertainment_menu.hide()
-        self.movies_widget.hide()
-        self.music_menu.hide()
-        self.youtube_music_widget.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.hide()
-        self.youtube_widget.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.youtube_widget)
 
     def show_movies(self):
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.music_menu.hide()
-        self.youtube_music_widget.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.hide()
-        self.movies_widget.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.movies_widget)
+
+    def show_intellectual_games(self):
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.intellectual_games_widget)
 
     def show_music_menu(self):
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.movies_widget.hide()
-        self.youtube_music_widget.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.hide()
-        self.music_menu.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.music_menu)
 
     def show_youtube_music(self):
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.movies_widget.hide()
-        self.music_menu.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.hide()
-        self.youtube_music_widget.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.youtube_music_widget)
 
     def show_apple_music(self):
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.movies_widget.hide()
-        self.music_menu.hide()
-        self.youtube_music_widget.hide()
-        self.soundcloud_widget.hide()
-        self.apple_music_widget.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.apple_music_widget)
 
     def show_soundcloud(self):
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.movies_widget.hide()
-        self.music_menu.hide()
-        self.youtube_music_widget.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.show()
+        self.map_widget.hide()
+        self.content_stack.setCurrentWidget(self.soundcloud_widget)
 
     def handle_nav_button(self, button_name):
-        # Hide all content first
-        self.map_widget.hide()
-        self.entertainment_menu.hide()
-        self.youtube_widget.hide()
-        self.movies_widget.hide()
-        self.music_menu.hide()
-        self.youtube_music_widget.hide()
-        self.apple_music_widget.hide()
-        self.soundcloud_widget.hide()
-        
-        # Show appropriate content based on button
         if button_name == "Maps":
+            self.content_stack.hide()
             self.map_widget.show()
         elif button_name == "Games":
-            self.entertainment_menu.show()
+            self.map_widget.hide()
+            self.content_stack.show()
+            self.content_stack.setCurrentWidget(self.entertainment_menu)
         elif button_name == "Music":
-            self.music_menu.show()
+            self.map_widget.hide()
+            self.content_stack.show()
+            self.content_stack.setCurrentWidget(self.music_menu)
         elif button_name == "Home":
-            pass  # Just hide everything
+            self.map_widget.hide()
+            self.content_stack.show()
+            self.content_stack.setCurrentWidget(self.entertainment_menu)
 
 class CarInterface(QMainWindow):
     def __init__(self):

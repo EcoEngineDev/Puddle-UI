@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QGraphicsView, QGraphicsScene, QGraphicsOpacityEffect
-from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QParallelAnimationGroup, QUrl
+from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, pyqtSignal, QParallelAnimationGroup, QUrl, QTimer
 from PyQt5.QtSvg import QGraphicsSvgItem
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtGui import QPainter
 import os
 
 class BootSequence(QWidget):
@@ -11,6 +12,8 @@ class BootSequence(QWidget):
         super().__init__(parent)
         self.setup_ui()
         self.setup_audio()
+        # Pre-load content
+        QTimer.singleShot(100, self.preload_content)
 
     def setup_audio(self):
         self.player = QMediaPlayer()
@@ -33,12 +36,14 @@ class BootSequence(QWidget):
         self.view.setFixedSize(1600, 600)  # Adjust as needed
         self.view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.view.setRenderHint(QPainter.Antialiasing)
+        self.view.setViewportUpdateMode(QGraphicsView.SmartViewportUpdate)
 
         # SVG item
         svg_path = os.path.join("Media", "MALLARD.svg")
         self.svg_item = QGraphicsSvgItem(svg_path)
         self.svg_item.setFlags(self.svg_item.ItemClipsToShape)
-        self.svg_item.setCacheMode(self.svg_item.NoCache)
+        self.svg_item.setCacheMode(self.svg_item.DeviceCoordinateCache)
         self.svg_item.setZValue(0)
         
         # Center the SVG in the view
@@ -56,6 +61,13 @@ class BootSequence(QWidget):
         self.opacity_effect.setOpacity(0.0)
 
         layout.addWidget(self.view)
+
+    def preload_content(self):
+        # Pre-render the SVG at both scales to cache them
+        self.view.viewport().repaint()
+        self.svg_item.setScale(4.8)
+        self.view.viewport().repaint()
+        self.svg_item.setScale(4.0)
 
     def start_boot_sequence(self):
         # Play boot sound
@@ -97,4 +109,5 @@ class BootSequence(QWidget):
         self.fade_out.start()
 
     def complete_boot_sequence(self):
-        self.boot_complete.emit()
+        # Ensure main content is ready before emitting signal
+        QTimer.singleShot(100, self.boot_complete.emit)
