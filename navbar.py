@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
 import os
 
 class navWidget(QWidget):
+    # Define signals for button clicks
+    button_clicked_signal = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
@@ -53,8 +56,8 @@ class navWidget(QWidget):
             games_icon.clicked.connect(lambda: self.button_clicked("Games"))
             layout.addWidget(games_icon)
 
-        layout.setAlignment(Qt.AlignCenter)
+        layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
     def button_clicked(self, button_name):
-        print(f"{button_name} button clicked!")
+        self.button_clicked_signal.emit(button_name)
