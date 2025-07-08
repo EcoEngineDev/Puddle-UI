@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFontDatabase, QFont
 from boot import BootSequence
 from speedometer import SpeedometerWidget
+from navbar import navWidget 
 
 class MainUI(QWidget):
     def __init__(self, parent=None):
@@ -22,6 +23,16 @@ class MainUI(QWidget):
         main_layout.addLayout(speedo_layout)
 
         # Spacer to push bottom labels down
+        main_layout.addStretch()
+
+        # Navigation bar at the top
+        top_row = QHBoxLayout()
+        top_row.setContentsMargins(0, 0, 0, 0)
+
+        # nav wdiget home icon
+        self.nav_widget = navWidget()
+        top_row.addWidget(self.nav_widget, alignment=Qt.AlignLeft | Qt.AlignTop)
+        main_layout.addLayout(top_row)
         main_layout.addStretch()
 
         # Bottom row layout for version (left) and MALLARD (center)
