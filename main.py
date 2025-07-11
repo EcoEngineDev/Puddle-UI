@@ -21,6 +21,7 @@ from youtube_music import YouTubeMusicWidget
 from apple_music import AppleMusicWidget
 from soundcloud import SoundCloudWidget
 from intellectual_games_widget import IntellectualGamesWidget
+from mini_map import MiniMapWidget
 import os
 
 class EntertainmentMenu(QWidget):
@@ -162,6 +163,8 @@ class MainUI(QWidget):
         
         # Right side with map
         self.map_widget = MapsWidget()
+        self.mini_map = MiniMapWidget(self)
+        speedometer_layout.addWidget(self.mini_map)
         content_layout.addWidget(self.map_widget, 1)
         self.map_widget.hide()
 
@@ -231,6 +234,8 @@ class MainUI(QWidget):
         self.content_stack.setCurrentWidget(self.soundcloud_widget)
 
     def handle_nav_button(self, button_name):
+        self.mini_map.setVisible(button_name != "Maps")
+
         if button_name == "Maps":
             self.content_stack.hide()
             self.map_widget.show()
