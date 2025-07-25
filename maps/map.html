@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,width=device-width">
+  <style>
+   html,body { height:100%; margin:0 }
+   #map     { height:100% }
+   /* search bar */
+   #bar     { position:absolute; top:8px; left:50%; transform:translateX(-50%);
+              z-index:6; background:#fff; padding:4px; border-radius:4px; display:flex }
+   #dest    { width:260px; border:1px solid #ccc; padding:4px }
+   #go      { padding:4px 10px; border:1px solid #ccc; background:#4285f4; color:#fff; cursor:pointer }
+   /* result list */
+   #list    { position:absolute; top:44px; left:50%; transform:translateX(-50%);
+              z-index:5; width:320px; max-height:240px; overflow:auto; background:#fff;
+              border:1px solid #ccc; display:none }
+   .item    { padding:6px 8px; cursor:pointer }
+   .item:hover { background:#eee }
+   /* floating buttons */
+   .fab     { position:absolute; width:44px; height:44px; border-radius:50%;
+              background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3);
+              display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:6 }
+   .fab:hover { background:#eee }
+   #recenter { bottom:20px; right:20px }
+   #rotate   { bottom:20px; right:74px }
+  </style>
+
+  <!-- load the vector/WebGL build -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=__API_KEY__&v=beta"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div id="bar">
+    <input id="dest" placeholder="Where to?">
+    <button id="go" disabled>Go</button>
+  </div>
+  <div id="list"></div>
+
+  <div id="recenter" class="fab" title="Back to me">⌖</div>
+  <div id="rotate"   class="fab" title="Rotate cw">⟳</div>
+
+  <script>
+    const R = 6371000;
+    let map, dirSvc, dirRend, origin = null, marker = null;
+    let lastFix = null, lastHead = 0, navig = true;
+
+    function toRad(d) { return d * Math.PI / 180 }
+    function dist(a, b) {
+      const φ1 = toRad(a.lat), φ2 = toRad(b.lat),
+            dφ = φ2 - φ1, dλ = toRad(b.lng - a.lng),
+            h = Math.sin(dφ/2)**2 +
+                Math.cos(φ1) * Math.cos(φ2) * Math.sin(dλ/2)**2;
+      return 2 * R * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+    }
+    function bearing(a, b) {
+      const φ1 = toRad(a.lat), φ2 = toRad(b.lat),
+            y = Math.sin(toRad(b.lng - a.lng)) * Math.cos(φ2),
+            x = Math.cos(φ1)*Math.sin(φ2) -
+                Math.sin(φ1)*Math.cos(φ2)*Math.cos(toRad(b.lng - a.lng));
+      return (Math.atan2(y, x)*180/Math.PI + 360) % 360;
+    }
+
+    function update(pos, hdHint) {
+      let hd = (hdHint != null && !isNaN(hdHint)) ? hdHint : lastHead;
+      if (lastFix && dist(lastFix, pos) > 30) hd = bearing(lastFix, pos);
+      lastFix = pos; lastHead = hd; origin = pos;
+
+      const ico = {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 6,
+        fillColor: '#4285f4',
+        fillOpacity: 1,
+        strokeColor: '#fff',
+        strokeWeight: 1,
+        rotation: hd
+      };
+      if (!marker) {
+        marker = new google.maps.Marker({ map, position: pos, icon: ico });
+      } else {
+        marker.setPosition(pos);
+        marker.setIcon(ico);
+      }
+
+      map.setHeading(hd);
+      if (navig) { map.panTo(pos); map.setZoom(18) }
+    }
+
+    function recenter() { if (origin) { navig = true; map.panTo(origin); map.setZoom(18) } }
+    function rotateCW() { map.setHeading(((map.getHeading()||0) + 90) % 360) }
+
+    function init() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: __LAT__, lng: __LNG__ },
+        zoom: 18,
+        tilt: 67.5,
+        heading: 0,
+        disableDefaultUI: true,
+        gestureHandling: 'greedy',
+        mapId: '__MAP_ID__'
+      });
+      dirSvc = new google.maps.DirectionsService();
+      dirRend = new google.maps.DirectionsRenderer({ map });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(p =>
+          update({ lat: p.coords.latitude, lng: p.coords.longitude }, p.coords.heading),
+          console.warn,
+          { enableHighAccuracy: true }
+        );
+      }
+
+      async function ipFallback() {
+        try {
+          const j = await (await fetch('https://ipapi.co/json/')).json();
+          update({ lat: +j.latitude, lng: +j.longitude }, null);
+        } catch {} 
+      }
+      ipFallback(); setInterval(ipFallback, 30000);
+
+      document.getElementById('recenter').onclick = recenter;
+      document.getElementById('rotate').onclick   = rotateCW;
+
+      // search & route
+      const d = document.getElementById('dest'),
+            g = document.getElementById('go'),
+            list = document.getElementById('list');
+
+      d.oninput = () => g.disabled = !d.value.trim();
+      d.addEventListener('keydown', e => { if (e.key === 'Enter') search() });
+      g.onclick = search;
+
+      async function search() {
+        const q = d.value.trim(); if (!q) return;
+        list.innerHTML = ''; list.style.display = 'block';
+        try {
+          const r = await fetch(
+            'https://places.googleapis.com/v1/places:searchText?key=__API_KEY__',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Goog-FieldMask': 'places.displayName,places.location'
+              },
+              body: JSON.stringify({
+                textQuery: q,
+                maxResultCount: 8,
+                languageCode: 'en'
+              })
+            }
+          );
+          const j = await r.json();
+          if (!j.places) {
+            list.innerHTML = '<div class="item">No results</div>';
+            return;
+          }
+          j.places.forEach(pl => {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.textContent = pl.displayName.text;
+            div.onclick = () => {
+              list.style.display = 'none';
+              routeTo(pl.location);
+            };
+            list.appendChild(div);
+          });
+        } catch (e) {
+          list.innerHTML = '<div class="item">' + e + '</div>';
+        }
+      }
+
+      function routeTo(loc) {
+        navig = true;
+        dirSvc.route({
+          origin: origin || map.getCenter(),
+          destination: loc,
+          travelMode: google.maps.TravelMode.DRIVING
+        })
+        .then(r => { dirRend.setDirections(r); map.setZoom(18) })
+        .catch(console.error);
+      }
+    }
+
+    window.init = init;
+    init();
+  </script>
+</body>
+</html>
