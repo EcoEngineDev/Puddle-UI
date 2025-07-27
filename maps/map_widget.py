@@ -38,3 +38,6 @@ class MapsWidget(QWebEngineView):
         )
         self.setPage(_GeoPage(self))
         self.setHtml(html, QUrl("https://localhost/"))
+
+
+

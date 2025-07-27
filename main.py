@@ -251,6 +251,23 @@ class MainUI(QWidget):
             self.map_widget.hide()
             self.content_stack.show()
             self.content_stack.setCurrentWidget(self.entertainment_menu)
+        
+
+        #write location data to JSON file
+        #from geopy.geocoders import Nominatim
+        #geolocator = Nominatim(user_agent="geoapi")
+        #location = geolocator.geocode("Weston, Florida")
+        #import json
+
+        # Data to be written to the JSON file
+        #data = {
+        #    "latitude": location.latitude,
+        #    "longitude": location.longitude
+        #}
+        #print(location.latitude, location.longitude)
+        # Writing to a JSON file
+        #with open("maps/map.json", "w") as json_file:
+        #    json.dump(data, json_file, indent=4)  # 'indent' makes the file more readable
 
 class CarInterface(QMainWindow):
     def __init__(self):
