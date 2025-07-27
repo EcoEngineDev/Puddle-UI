@@ -7,11 +7,21 @@ body,
   padding: 0;
   scroll-behavior: smooth;
 }
+@font-face {
+  font-family: lexand;
+  src: url('/Fonts/Lexend-Thin.ttf') format('truetype');
+}
+
+html {
+  font-family: lexand, sans-serif;
+  font-weight: 100;
+}
+
 .info-box {
   position: absolute;
   top: 8px;
   right: 8px;
-  z-index: 10;
+  z-index: 8;
   background: #000000d8;
   border-radius: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -82,10 +92,11 @@ body,
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  background: #ffffff;
+  background: #000000;
   padding: 4px;
   display: flex;
   border-radius: 10px;
+  color:#fff;
 }
 #dest {
   width: 260px;
@@ -99,26 +110,28 @@ body,
   padding: 4px 10px;
   border: 0px;
   background: #4285f4;
-  color: #fff;
+  color: #ffffff;
   cursor: pointer;
   font-size: 14px;
   border-radius: 30px;
 }
 #results {
   position: absolute;
-  padding-top: 10px;
-  top: 34px;
+  padding-top: 8px;
+  top: 31px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
+  z-index: 9;
   width: 320px;
   max-height: 240px;
   overflow: auto;
-  background: #fff;
+  background: #000000;
+  color:#fff;
   border: 0px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   display: none;
+  font-size: 14px;
 }
 #results::-webkit-scrollbar {
   display: none;
