@@ -1,158 +1,66 @@
-html,
-body,
-#map {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  scroll-behavior: smooth;
-}
+html,body,#map {height:100%;width:100%;margin:0;padding:0}
 .info-box {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-  background: #000000d8;
-  border-radius: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  width: 30%;
-  max-height: calc(100% - 16px);
-  overflow: hidden;
+  position:absolute;top:8px;left:8px;z-index:10;
+  background:#fff;border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  width:300px;max-height:calc(100% - 16px);overflow:auto
 }
 .info-box img {
-  width: 100%;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  width:100%;border-top-left-radius:8px;border-top-right-radius:8px
 }
 .info-box .details {
-  padding: 12px;
-  color: #ffffff;
+  padding:12px
 }
 .info-box .details h2 {
-  margin: 0 0 4px 0;
-  font-size: 18px;
-  color: #ffffff;
+  margin:0 0 4px 0;font-size:18px
 }
 .info-box .details .rating {
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: #ffffff;
+  font-size:14px;margin-bottom:8px
 }
-.info-box .details p,
-.info-box .details a {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #ffffff;
-  text-decoration: none;
-  overflow: wrap;
+.info-box .details p, .info-box .details a {
+  margin:4px 0;font-size:14px;color:#333;text-decoration:none
 }
 .info-box .directions-btn {
-  display: grid;
-  width: 100%;
-  align-self: center;
-  padding: 8px 0;
-  background: #4285f4;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  text-align: center;
+  display:block;width:100%;padding:8px 0;
+  background:#4285f4;color:#fff;border:none;
+  border-bottom-left-radius:8px;border-bottom-right-radius:8px;
+  cursor:pointer;font-size:16px;text-align:center
 }
 .turn-box {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  display: none;
-  max-width: 200px;
+  position:absolute;top:8px;right:8px;z-index:10;
+  background:rgba(0,0,0,0.75);color:#fff;
+  padding:8px 12px;border-radius:4px;
+  font-size:14px;display:none;max-width:200px
 }
-.turn-box .arrow {
-  font-size: 20px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+.turn-box .arrow {font-size:20px;margin-right:8px;vertical-align:middle}
 #controls {
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  background: #ffffff;
-  padding: 4px;
-  display: flex;
-  border-radius: 10px;
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  z-index:10;background:#fff;padding:4px;border-radius:4px;
+  display:flex;box-shadow:0 1px 4px rgba(0,0,0,0.3)
 }
 #dest {
-  width: 260px;
-  padding: 4px;
-  font-size: 14px;
-  border-radius: 30px;
-  border-width: 0;
+  width:260px;border:1px solid #ccc;padding:4px;font-size:14px
 }
 #go {
-  margin-left: 6px;
-  padding: 4px 10px;
-  border: 0px;
-  background: #4285f4;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 30px;
+  margin-left:6px;padding:4px 10px;border:1px solid #ccc;
+  background:#4285f4;color:#fff;cursor:pointer;font-size:14px
 }
 #results {
-  position: absolute;
-  padding-top: 10px;
-  top: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  width: 320px;
-  max-height: 240px;
-  overflow: auto;
-  background: #fff;
-  border: 0px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  display: none;
+  position:absolute;top:44px;left:50%;transform:translateX(-50%);
+  z-index:10;width:320px;max-height:240px;overflow:auto;
+  background:#fff;border:1px solid #ccc;border-radius:4px;
+  display:none
 }
-#results::-webkit-scrollbar {
-  display: none;
-}
-
 .res {
-  padding: 8px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
+  padding:8px;cursor:pointer;border-bottom:1px solid #eee
 }
-.res:last-child {
-  border-bottom: none;
-}
-.res:hover {
-  background: #f0f0f0;
-}
+.res:last-child {border-bottom:none}
+.res:hover {background:#f0f0f0}
 .fab {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
+  position:absolute;width:44px;height:44px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:10
 }
-#recenter {
-  bottom: 20px;
-  right: 20px;
-}
-#rotate {
-  bottom: 20px;
-  right: 74px;
-}
+#recenter {bottom:20px;right:20px}
+#rotate   {bottom:20px;right:74px}
