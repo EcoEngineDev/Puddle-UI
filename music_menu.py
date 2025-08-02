@@ -1,14 +1,18 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QFont
+# from debug_logger import debug_logger
 
 class MusicMenu(QWidget):
     def __init__(self, parent=None):
+        # debug_logger.log_function_entry("__init__", "MusicMenu", parent=parent)
         super().__init__(parent)
         self.setup_ui()
         self.hide()  # Hidden by default
+        # debug_logger.log_function_exit("__init__", "MusicMenu")
 
     def setup_ui(self):
+        # debug_logger.log_function_entry("setup_ui", "MusicMenu")
         layout = QGridLayout()
         layout.setSpacing(20)  # Space between buttons
         
@@ -48,4 +52,5 @@ class MusicMenu(QWidget):
             self.buttons[text] = btn  # Store button reference
         
         layout.setContentsMargins(50, 50, 50, 50)  # Add some padding around the grid
-        self.setLayout(layout) 
+        self.setLayout(layout)
+        # debug_logger.log_function_exit("setup_ui", "MusicMenu") 

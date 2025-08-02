@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings
 from PyQt5.QtCore import QUrl, QSize, Qt
 from keyboard import VirtualKeyboard
+from widget_config import WIDGET_WIDTH, WIDGET_HEIGHT
 
 class DarkModePage(QWebEnginePage):
     def __init__(self, parent=None):
@@ -44,20 +45,30 @@ class WebAppWidget(QWidget):
     def setup_ui(self):
         # Main layout
         layout = QVBoxLayout()
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(0)
+        # Change these values to modify spacing around the widget
+        # Current: 20px margins on all sides
+        # Example: 0 for no margins, 50 for more space
+        layout.setContentsMargins(20, 20, 20, 20)  # left, top, right, bottom
+        layout.setSpacing(0)  # Space between widgets in layout
         
         # Container for web view
         web_container = QFrame()
         web_layout = QVBoxLayout(web_container)
-        web_layout.setContentsMargins(0, 0, 0, 0)
+        # Change these values to modify internal spacing
+        # Current: 0px margins inside the container
+        web_layout.setContentsMargins(0, 0, 0, 0)  # left, top, right, bottom
         
         # Create web view with dark mode page
         self.web_view = QWebEngineView()
         self.page = DarkModePage(self.web_view)
         self.web_view.setPage(self.page)
         self.web_view.setUrl(QUrl(self.url))
-        self.web_view.setMinimumSize(QSize(1280, 768))  # 1600*0.8 = 1280, 960*0.8 = 768
+        # Change WIDGET_WIDTH and WIDGET_HEIGHT in widget_config.py to modify YouTube widget size
+        # Current: Uses WIDGET_WIDTH x WIDGET_HEIGHT from configuration
+        # Example: 1600x900 for full HD, 1920x1080 for 1080p
+        self.web_view.setMinimumSize(QSize(WIDGET_WIDTH, WIDGET_HEIGHT))
+        # You can also set maximum size for fixed sizing:
+        # self.web_view.setMaximumSize(QSize(WIDGET_WIDTH, WIDGET_HEIGHT))
         web_layout.addWidget(self.web_view)
         
         # Add virtual keyboard

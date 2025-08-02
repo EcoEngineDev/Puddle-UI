@@ -74,30 +74,40 @@ async function searchPlaces() {
   results.innerHTML = "";
   results.style.display = "block";
 
-  placesService.textSearch({ query: q }, (pls, status) => {
-    if (status !== google.maps.places.PlacesServiceStatus.OK) {
-      results.innerHTML = '<div class="res">No results</div>';
-      return;
-    }
-    pls.forEach((pl) => {
-      const div = document.createElement("div");
-      div.className = "res";
-      div.textContent = pl.name;
-      div.onclick = () => {
-        results.style.display = "none";
-        showInfo(pl.place_id, pl.geometry.location);
-      };
-      results.appendChild(div);
+  try {
+    placesService.textSearch({ query: q }, (pls, status) => {
+      if (status !== google.maps.places.PlacesServiceStatus.OK) {
+        results.innerHTML = '<div class="res">No results found</div>';
+        return;
+      }
+      if (!pls || pls.length === 0) {
+        results.innerHTML = '<div class="res">No results found</div>';
+        return;
+      }
+      pls.forEach((pl) => {
+        const div = document.createElement("div");
+        div.className = "res";
+        div.textContent = pl.name;
+        div.onclick = () => {
+          results.style.display = "none";
+          showInfo(pl.place_id, pl.geometry.location);
+        };
+        results.appendChild(div);
+      });
     });
-  });
+  } catch (error) {
+    console.error("Search error:", error);
+    results.innerHTML = '<div class="res">Search service unavailable</div>';
+  }
 }
 
 function showInfo(placeId, location) {
-  placesService.getDetails(
-    {
-      placeId: placeId,
-      fields: [
-        "name",
+  try {
+    placesService.getDetails(
+      {
+        placeId: placeId,
+        fields: [
+          "name",
         "formatted_address",
         "formatted_phone_number",
         "rating",
@@ -167,6 +177,12 @@ function showInfo(placeId, location) {
       box.style.display = "block";
     }
   );
+  } catch (error) {
+    console.error("Place details error:", error);
+    const box = document.getElementById("infoBox");
+    box.innerHTML = '<div class="details"><h2>Error</h2><p>Unable to load place details</p></div>';
+    box.style.display = "block";
+  }
 }
 
 function routeTo(dest) {
@@ -209,27 +225,43 @@ function init() {
     polylineOptions: { strokeWeight: 6 },
   });
 
-  placesService = new google.maps.places.PlacesService(map);
-
-
-  (async function ipFallback() {
-    try {
-      const r = await fetch("https://ipapi.co/json/");
-      const j = await r.json();
-      console.log("===========================================================================");
-      console.log(j.latitude, j.longitude);
-      console.log("===========================================================================");
-      if (j.latitude) {
-        origin = { lat: +j.latitude, lng: +j.longitude };
-        updateUser(origin.lat, origin.lng);
-        document.getElementById("go").disabled = false;
+  // Initialize PlacesService with error handling for Windows compatibility
+  try {
+    placesService = new google.maps.places.PlacesService(map);
+  } catch (error) {
+    console.warn("PlacesService initialization failed:", error);
+    // Fallback: create a dummy service that shows an error message
+    placesService = {
+      textSearch: function(request, callback) {
+        callback([], google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR);
+      },
+      getDetails: function(request, callback) {
+        callback(null, google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR);
       }
-    } catch {}
-  })();
+    };
+  }
 
 
-  document.getElementById("recenter").onclick = recenter;
-  document.getElementById("rotate").onclick = rotateCW;
+  // IP-based location fallback (disabled for Windows compatibility)
+  // (async function ipFallback() {
+  //   try {
+  //     const r = await fetch("https://ipapi.co/json/");
+  //     const j = await r.json();
+  //     console.log("===========================================================================");
+  //     console.log(j.latitude, j.longitude);
+  //     console.log("===========================================================================");
+  //     if (j.latitude) {
+  //       origin = { lat: +j.latitude, lng: +j.longitude };
+  //       updateUser(origin.lat, origin.lng);
+  //       document.getElementById("go").disabled = false;
+  //     }
+  //   } catch {}
+  // })();
+
+
+  // Remove or comment out recenter/rotate button handlers
+  // document.getElementById("recenter").onclick = recenter;
+  // document.getElementById("rotate").onclick = rotateCW;
   document.getElementById("go").onclick = searchPlaces;
   document.getElementById("dest").addEventListener("keydown", (e) => {
     if (e.key === "Enter") searchPlaces();

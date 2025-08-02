@@ -1,88 +1,110 @@
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtWidgets import QFrame, QVBoxLayout
-from PyQt5.QtWebEngineWidgets import (
-    QWebEngineProfile,
-    QWebEnginePage,
-    QWebEngineView,
-)
+import os
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineProfile, QWebEngineSettings
+from PyQt5.QtCore import QUrl, QSize, Qt
+from PyQt5.QtGui import QFont
+# from debug_logger import debug_logger
 
+class MiniMapPage(QWebEnginePage):
+    def __init__(self, profile, parent=None):
+        super().__init__(profile, parent)
+        # Enable touch-friendly settings
+        settings = self.settings()
+        settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
+        settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
+        settings.setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        settings.setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        # Set touch-optimized defaults
+        settings.setFontSize(QWebEngineSettings.DefaultFontSize, 16)
+        settings.setFontSize(QWebEngineSettings.MinimumFontSize, 14)
 
-class GeoPage(QWebEnginePage):
-    def featurePermissionRequested(self, origin, feature):
-        if feature == QWebEnginePage.Geolocation:
-            self.setFeaturePermission(
-                origin, feature, QWebEnginePage.PermissionGrantedByUser
-            )
-        else:
-            super().featurePermissionRequested(origin, feature)
+class MiniMapWidget(QWidget):
+    def __init__(self, parent=None):
+        try:
+            # debug_logger.log_function_entry("__init__", "MiniMapWidget", parent=parent)
+            super().__init__(parent)
+            # Create custom profile with modified settings
+            # debug_logger.log_info("Creating mini map web engine profile", "MiniMapWidget")
+            self.profile = QWebEngineProfile("minimap_profile")
+            self.profile.setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            self.setup_ui()
+            self.hide()  # Hidden by default
+            # debug_logger.log_function_exit("__init__", "MiniMapWidget")
+        except Exception as e:
+            # debug_logger.log_error(f"Error initializing MiniMapWidget: {str(e)}", "MiniMapWidget", exc_info=True)
+            print(f"Error initializing MiniMapWidget: {str(e)}")
+            # Create a simple fallback widget instead of crashing
+            super().__init__(parent)
+            self.setStyleSheet("background:#000;color:#666;text-align:center;border:2px solid #444;border-radius:8px;")
+            self.setFixedSize(300, 300)
+            self.hide()
 
-
-class MiniMapWidget(QFrame):
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.setFixedSize(300, 300)
-        self.setStyleSheet("background:#000;border:2px solid #444;border-radius:8px;")
-        self.setWindowFlags(Qt.Widget | Qt.FramelessWindowHint)
-
-        profile = QWebEngineProfile("mini-map", self)
-        profile.setHttpUserAgent(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        )
-
-        self.view = QWebEngineView(self)
-        self.view.setPage(GeoPage(profile, self.view))
-        self.view.setContextMenuPolicy(Qt.NoContextMenu)
-        self.view.setFixedSize(296, 296)
-
-        lay = QVBoxLayout(self)
-        lay.setContentsMargins(2, 2, 2, 2)
-        lay.addWidget(self.view)
-
+    def setup_ui(self):
+        # Main layout
+        layout = QVBoxLayout()
+        layout.setContentsMargins(2, 2, 2, 2)
+        layout.setSpacing(0)
+        
+        # Container for web view
+        web_container = QFrame()
+        web_layout = QVBoxLayout(web_container)
+        web_layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Create web view for Mini Map with touch-optimized page
+        # debug_logger.log_info("Creating mini map web view", "MiniMapWidget")
+        self.web_view = QWebEngineView()
+        self.page = MiniMapPage(self.profile, self.web_view)
+        self.web_view.setPage(self.page)
+        # debug_logger.log_info("Loading Leaflet map", "MiniMapWidget")
         self._load_leaflet()
-        parent.installEventFilter(self)
-        self._reposition()
-        self.show()
-
+        self.web_view.setMinimumSize(QSize(296, 296))  # Slightly smaller than container
+        web_layout.addWidget(self.web_view)
+        
+        # Add web container to main layout
+        layout.addWidget(web_container)
+        self.setLayout(layout)
+        
     def _load_leaflet(self):
+        # debug_logger.log_function_entry("_load_leaflet", "MiniMapWidget")
+        # Create a simple Leaflet map HTML
         html = """
         <!DOCTYPE html>
         <html>
         <head>
-          <meta charset="utf-8">
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-          <style>html,body,#map{height:100%;margin:0}</style>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            <style>
+                body { margin: 0; padding: 0; }
+                #map { height: 100vh; width: 100vw; }
+            </style>
         </head>
         <body>
-          <div id="map"></div>
-          <script>
-            const map = L.map('map',{
-              zoomControl:false,
-              attributionControl:false,
-              minZoom:3,maxZoom:18
-            }).setView([39.8283,-98.5795],4);
-
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-              maxZoom:18
-            }).addTo(map);
-
-            if(navigator.geolocation){
-              navigator.geolocation.watchPosition(p=>{
-                const lat=p.coords.latitude, lon=p.coords.longitude;
-                map.setView([lat,lon],14);
-              });
-            }
-          </script>
+            <div id="map"></div>
+            <script>
+                // Initialize the map
+                var map = L.map('map').setView([40.758, -73.9855], 13);
+                
+                // Add OpenStreetMap tiles
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Add a marker for current location (placeholder)
+                var marker = L.marker([40.758, -73.9855]).addTo(map);
+                marker.bindPopup("<b>Current Location</b><br>New York, NY").openPopup();
+                
+                // Disable scroll wheel zoom to prevent accidental zooming
+                map.scrollWheelZoom.disable();
+                
+                // Disable dragging to prevent map movement
+                map.dragging.disable();
+            </script>
         </body>
         </html>
         """
-        self.view.setHtml(html, QUrl())
-
-    def eventFilter(self, obj, ev):
-        if obj is self.parent() and ev.type() == ev.Resize:
-            self._reposition()
-        return False
-
-    def _reposition(self):
-        self.move(12, self.parent().height() - self.height() - 12)
+        
+        self.web_view.setHtml(html, QUrl("https://localhost/"))
+        # debug_logger.log_function_exit("_load_leaflet", "MiniMapWidget")

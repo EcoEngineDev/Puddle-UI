@@ -1,11 +1,14 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings, QWebEngineProfile
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineProfile, QWebEngineSettings
 from PyQt5.QtCore import QUrl, QSize, Qt
 from keyboard import VirtualKeyboard
+# from debug_logger import debug_logger
+from web_view import WebAppWidget
+from widget_config import WIDGET_WIDTH, WIDGET_HEIGHT
 
 class MoviesPage(QWebEnginePage):
-    def __init__(self, profile, parent=None):
-        super().__init__(profile, parent)
+    def __init__(self, parent=None):
+        super().__init__(parent)
         
         # Enable all settings that might help bypass restrictions
         settings = self.settings()
@@ -51,16 +54,15 @@ class MoviesPage(QWebEnginePage):
         # print(f"Console: {message} at line {lineNumber} in {sourceID}")
         pass
 
-class MoviesWidget(QWidget):
+class MoviesWidget(WebAppWidget):
     def __init__(self, parent=None):
-        super().__init__(parent)
-        # Create custom profile with modified settings
-        self.profile = QWebEngineProfile("movie_profile")
-        self.profile.setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-        self.setup_ui()
-        self.hide()  # Hidden by default
+        # debug_logger.log_function_entry("__init__", "MoviesWidget", parent=parent)
+        super().__init__("https://rivestream.org", parent)
+        # debug_logger.log_info("Creating movie web engine profile", "MoviesWidget")
+        # debug_logger.log_function_exit("__init__", "MoviesWidget")
 
     def setup_ui(self):
+        # debug_logger.log_function_entry("setup_ui", "MoviesWidget")
         # Main layout
         layout = QVBoxLayout()
         layout.setContentsMargins(20, 20, 20, 20)
@@ -72,11 +74,14 @@ class MoviesWidget(QWidget):
         web_layout.setContentsMargins(0, 0, 0, 0)
         
         # Create web view for Movies with touch-optimized page
+        # debug_logger.log_info("Creating movie web view", "MoviesWidget")
         self.web_view = QWebEngineView()
-        self.page = MoviesPage(self.profile, self.web_view)
+        self.page = MoviesPage(self.web_view)
         self.web_view.setPage(self.page)
-        self.web_view.setUrl(QUrl("https://rivestream.org"))
-        self.web_view.setMinimumSize(QSize(1280, 768))  # Same size as YouTube
+        # debug_logger.log_info("Loading movie website: https://rivestream.org", "MoviesWidget")
+        self.web_view.setUrl(QUrl(self.url))
+        # Uses WIDGET_WIDTH x WIDGET_HEIGHT from configuration for consistent sizing
+        self.web_view.setMinimumSize(QSize(WIDGET_WIDTH, WIDGET_HEIGHT))
         web_layout.addWidget(self.web_view)
         
         # Add virtual keyboard
@@ -89,6 +94,7 @@ class MoviesWidget(QWidget):
         # Add web container to main layout
         layout.addWidget(web_container)
         self.setLayout(layout)
+        # debug_logger.log_function_exit("setup_ui", "MoviesWidget")
         
         # Handle focus changes to show/hide keyboard
         self.web_view.focusProxy().installEventFilter(self)

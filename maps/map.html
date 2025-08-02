@@ -10,7 +10,7 @@
           INITIAL_LAT   =__LAT__,
           INITIAL_LNG   =__LNG__;
   </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=__API_KEY__&v=beta&libraries=places&callback=init" defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=__API_KEY__&v=beta&libraries=places&callback=init&loading=async" defer></script>
 </head>
 <body>
   <div id="map"></div>
@@ -21,8 +21,8 @@
     <button id="go" disabled>Go</button>
   </div>
   <div id="results"></div>
-  <div id="recenter" class="fab" title="Back to me">⌖</div>
-  <div id="rotate"   class="fab" title="Rotate map">⟳</div>
+  <!-- <div id="recenter" class="fab" title="Back to me">⌖</div> -->
+  <!-- <div id="rotate"   class="fab" title="Rotate map">⟳</div> -->
   <script>//INLINE_JS</script>
 </body>
 </html>
