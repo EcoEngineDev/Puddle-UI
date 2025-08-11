@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 
 # Import widget size configuration
-from widget_config import WIDGET_WIDTH, WIDGET_HEIGHT, MINIMAP_SIZE
+from src.widget_config import WIDGET_WIDTH, WIDGET_HEIGHT, MINIMAP_SIZE
 
 # Filter out all PyQt5 deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -19,6 +19,7 @@ from PyQt5.QtCore import Qt, QRectF, QPoint, QSize, QEvent
 from PyQt5.QtGui import QFontDatabase, QFont, QColor, QKeyEvent
 from PyQt5.QtSvg import QSvgRenderer
 from PyQt5.QtGui import QPainter
+from src.style.buttons import primary_button_style
 
 # Now import the debug logger (commented out for now)
 # from debug_logger import debug_logger, log_function
@@ -35,19 +36,19 @@ else:
     print("Google Maps API key not found in environment variables")
 
 # Import custom modules
-from speedometer import SpeedometerWidget
-from navbar import navWidget
-from maps import MapsWidget
-from youtube import YouTubeWidget
-from movies import MoviesWidget
-from music_menu import MusicMenu
-from youtube_music import YouTubeMusicWidget
-from apple_music import AppleMusicWidget
-from soundcloud import SoundCloudWidget
-from intellectual_games_widget import IntellectualGamesWidget
-from mini_map import MiniMapWidget
-from boot_animation import BootAnimation
-from clock_widget import ClockWidget, TimeOnlyWidget, DateOnlyWidget
+from src.speedometer import SpeedometerWidget
+from src.navbar import navWidget
+from src.web_embed.maps import MapsWidget
+from src.web_embed.youtube import YouTubeWidget
+from src.web_embed.movies import MoviesWidget
+from src.music_menu import MusicMenu
+from src.web_embed.youtube_music import YouTubeMusicWidget
+from src.web_embed.apple_music import AppleMusicWidget
+from src.web_embed.soundcloud import SoundCloudWidget
+from src.web_embed.intellectual_games_widget import IntellectualGamesWidget
+from src.web_embed.mini_map import MiniMapWidget
+from src.boot_animation import BootAnimation
+from src.clock_widget import ClockWidget, TimeOnlyWidget, DateOnlyWidget
 
 class EntertainmentMenu(QWidget):
     def __init__(self, parent=None):
@@ -68,22 +69,7 @@ class EntertainmentMenu(QWidget):
         grid_layout = QGridLayout(grid_container)
         grid_layout.setSpacing(20)  # Space between buttons
         
-        # Button style
-        button_style = """
-            QPushButton {
-                background-color: #1A1A1A;
-                color: #00FFA3;
-                border: 2px solid #00FFA3;
-                border-radius: 10px;
-                padding: 15px;
-                font-family: 'Lexend Bold';
-                font-size: 18px;
-            }
-            QPushButton:hover {
-                background-color: #00FFA3;
-                color: #000000;
-            }
-        """
+        button_style = primary_button_style()
         
         # Create buttons
         options = [
