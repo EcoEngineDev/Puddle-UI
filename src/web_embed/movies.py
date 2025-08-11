@@ -50,9 +50,17 @@ class MoviesPage(QWebEnginePage):
         return super().acceptNavigationRequest(url, _type, isMainFrame)
 
     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        msg = str(message)
+        noisy = (
+            'preloaded using link preload but not used' in msg or
+            'blocked by CORS policy' in msg or
+            'generate_204' in msg
+        )
+        if noisy:
+            return
         # Uncomment for debugging
         # print(f"Console: {message} at line {lineNumber} in {sourceID}")
-        pass
+        return super().javaScriptConsoleMessage(level, message, lineNumber, sourceID)
 
 class MoviesWidget(WebAppWidget):
     def __init__(self, parent=None):
@@ -70,6 +78,7 @@ class MoviesWidget(WebAppWidget):
         
         # Container for web view
         web_container = QFrame()
+        self._web_container = web_container
         web_layout = QVBoxLayout(web_container)
         web_layout.setContentsMargins(0, 0, 0, 0)
         
@@ -98,7 +107,8 @@ class MoviesWidget(WebAppWidget):
         
         # Handle focus changes to show/hide keyboard
         self.web_view.focusProxy().installEventFilter(self)
-        
+
+    
     def handle_key_press(self, key):
         # Handle special keys
         if key == '\b':

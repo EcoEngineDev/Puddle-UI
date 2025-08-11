@@ -3,6 +3,7 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineS
 from PyQt5.QtCore import QUrl, QSize, Qt
 from src.keyboard import VirtualKeyboard
 from src.widget_config import WIDGET_WIDTH, WIDGET_HEIGHT
+ 
 
 class DarkModePage(QWebEnginePage):
     def __init__(self, parent=None):
@@ -35,10 +36,24 @@ class DarkModePage(QWebEnginePage):
             """)
         return super().acceptNavigationRequest(url, _type, isMainFrame)
 
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        msg = str(message)
+        noisy = (
+            'preloaded using link preload but not used' in msg or
+            'blocked by CORS policy' in msg or
+            'generate_204' in msg
+        )
+        if noisy:
+            return
+        # Uncomment for debugging
+        # print(f"Console: {message} @ {lineNumber} in {sourceID}")
+        return super().javaScriptConsoleMessage(level, message, lineNumber, sourceID)
+
 class WebAppWidget(QWidget):
     def __init__(self, url, parent=None):
         super().__init__(parent)
         self.url = url
+        self._loaded = False
         self.setup_ui()
         self.hide()  # Hidden by default
 
@@ -53,6 +68,7 @@ class WebAppWidget(QWidget):
         
         # Container for web view
         web_container = QFrame()
+        self._web_container = web_container
         web_layout = QVBoxLayout(web_container)
         # Change these values to modify internal spacing
         # Current: 0px margins inside the container
@@ -84,6 +100,8 @@ class WebAppWidget(QWidget):
         
         # Handle focus changes to show/hide keyboard
         self.web_view.focusProxy().installEventFilter(self)
+
+        # No loading overlay/spinner
         
     def handle_key_press(self, key):
         # Handle special keys
@@ -117,3 +135,4 @@ class WebAppWidget(QWidget):
         # Ensure keyboard is properly positioned when widget is shown
         if self.keyboard.isVisible():
             self.keyboard.move(0, self.height() - self.keyboard.height()) 
+        # No loading overlay

@@ -47,6 +47,7 @@ from src.web_embed.apple_music import AppleMusicWidget
 from src.web_embed.soundcloud import SoundCloudWidget
 from src.web_embed.intellectual_games_widget import IntellectualGamesWidget
 from src.web_embed.mini_map import MiniMapWidget
+from src.web_embed.manager import web_embed_manager
 from src.boot_animation import BootAnimation
 from src.clock_widget import ClockWidget, TimeOnlyWidget, DateOnlyWidget
 
@@ -278,40 +279,44 @@ class MainUI(QWidget):
         # debug_logger.log_function_exit("setup_ui", "MainUI")
 
     def show_youtube(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
+        web_embed_manager.open("YouTube", self.youtube_widget)
         self.content_stack.setCurrentWidget(self.youtube_widget)
 
     def show_movies(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
+        web_embed_manager.open("Movies", self.movies_widget)
         self.content_stack.setCurrentWidget(self.movies_widget)
 
     def show_intellectual_games(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
+        web_embed_manager.open("IntellectualGames", self.intellectual_games_widget)
         self.content_stack.setCurrentWidget(self.intellectual_games_widget)
 
     def show_music_menu(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
+        web_embed_manager.close_current()
         self.content_stack.setCurrentWidget(self.music_menu)
 
     def show_youtube_music(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
         self.apple_music_widget.hide()
         self.soundcloud_widget.hide()
-        self.youtube_music_widget.show()
+        web_embed_manager.open("YouTubeMusic", self.youtube_music_widget)
         self.content_stack.setCurrentWidget(self.youtube_music_widget)
 
     def show_apple_music(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
         self.youtube_music_widget.hide()
         self.soundcloud_widget.hide()
-        self.apple_music_widget.show()
+        web_embed_manager.open("AppleMusic", self.apple_music_widget)
         self.content_stack.setCurrentWidget(self.apple_music_widget)
 
     def show_soundcloud(self):
-        self.maps_container.hide() # Changed from self.maps_widget to self.maps_container
+        self.maps_container.hide()
         self.youtube_music_widget.hide()
         self.apple_music_widget.hide()
-        self.soundcloud_widget.show()
+        web_embed_manager.open("SoundCloud", self.soundcloud_widget)
         self.content_stack.setCurrentWidget(self.soundcloud_widget)
 
     def handle_nav_button(self, button_name):

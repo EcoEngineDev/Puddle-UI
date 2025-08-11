@@ -4,6 +4,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings, QWebEngineProfile
 from PyQt5.QtCore import QUrl
 from src.keyboard import VirtualKeyboard
+ 
 
 class GamePage(QWebEnginePage):
     def __init__(self, profile, parent=None):
@@ -24,6 +25,17 @@ class GamePage(QWebEnginePage):
         # Set touch-optimized defaults
         settings.setFontSize(QWebEngineSettings.DefaultFontSize, 16)
         settings.setFontSize(QWebEngineSettings.MinimumFontSize, 14)
+
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        msg = str(message)
+        noisy = (
+            'preloaded using link preload but not used' in msg or
+            'blocked by CORS policy' in msg or
+            'generate_204' in msg
+        )
+        if noisy:
+            return
+        return super().javaScriptConsoleMessage(level, message, lineNumber, sourceID)
 
 class IntellectualGamesWidget(QWidget):
     def __init__(self, parent=None):
@@ -110,7 +122,9 @@ class IntellectualGamesWidget(QWidget):
         self.web_view = QWebEngineView()
         self.page = GamePage(self.profile, self.web_view)
         self.web_view.setPage(self.page)
+        # Add web view directly
         web_layout.addWidget(self.web_view)
+        
         
         # Add virtual keyboard
         self.keyboard = VirtualKeyboard(self)
@@ -127,9 +141,11 @@ class IntellectualGamesWidget(QWidget):
         for button in self.buttons.values():
             button.hide()
         self.web_container.show()
+        
         # Install event filter after web view is shown
         if self.web_view.focusProxy():
             self.web_view.focusProxy().installEventFilter(self)
+        
 
     def show_menu(self):
         self.web_container.hide()

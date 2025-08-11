@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings, QWebEngineProfile
 from PyQt5.QtCore import QUrl, QSize, Qt
 from src.keyboard import VirtualKeyboard
+ 
 
 class SoundCloudPage(QWebEnginePage):
     def __init__(self, profile, parent=None):
@@ -23,12 +24,25 @@ class SoundCloudPage(QWebEnginePage):
         settings.setFontSize(QWebEngineSettings.DefaultFontSize, 16)
         settings.setFontSize(QWebEngineSettings.MinimumFontSize, 14)
 
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        msg = str(message)
+        noisy = (
+            'preloaded using link preload but not used' in msg or
+            'blocked by CORS policy' in msg or
+            'generate_204' in msg
+        )
+        if noisy:
+            return
+        return super().javaScriptConsoleMessage(level, message, lineNumber, sourceID)
+
 class SoundCloudWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         # Create custom profile with modified settings
         self.profile = QWebEngineProfile("soundcloud_profile")
         self.profile.setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        self.default_url = "https://soundcloud.com"
+        
         self.setup_ui()
         self.hide()  # Hidden by default
 
@@ -40,6 +54,7 @@ class SoundCloudWidget(QWidget):
         
         # Container for web view
         web_container = QFrame()
+        self._web_container = web_container
         web_layout = QVBoxLayout(web_container)
         web_layout.setContentsMargins(0, 0, 0, 0)
         
@@ -47,7 +62,7 @@ class SoundCloudWidget(QWidget):
         self.web_view = QWebEngineView()
         self.page = SoundCloudPage(self.profile, self.web_view)
         self.web_view.setPage(self.page)
-        self.web_view.setUrl(QUrl("https://soundcloud.com"))
+        self.web_view.setUrl(QUrl(self.default_url))
         self.web_view.setMinimumSize(QSize(1280, 768))
         web_layout.addWidget(self.web_view)
         
@@ -64,6 +79,12 @@ class SoundCloudWidget(QWidget):
         
         # Handle focus changes to show/hide keyboard
         self.web_view.focusProxy().installEventFilter(self)
+        
+    
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.web_view.loadStarted.connect(lambda: self.stack.setCurrentIndex(0))
+        self.web_view.loadFinished.connect(lambda ok: self.stack.setCurrentIndex(1))
         
     def handle_key_press(self, key):
         # Handle special keys
