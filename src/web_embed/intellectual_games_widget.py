@@ -4,6 +4,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings, QWebEngineProfile
 from PyQt5.QtCore import QUrl
 from src.keyboard import VirtualKeyboard
+from src.web_embed.adblock import enable_adblock
  
 
 class GamePage(QWebEnginePage):
@@ -124,6 +125,7 @@ class IntellectualGamesWidget(QWidget):
         self.web_view.setPage(self.page)
         # Add web view directly
         web_layout.addWidget(self.web_view)
+        enable_adblock(self.web_view, target="auto")
         
         
         # Add virtual keyboard

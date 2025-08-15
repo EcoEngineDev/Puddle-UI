@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineProfile, QWebEngineSettings
 from PyQt5.QtCore import QUrl, QSize, Qt
 from src.keyboard import VirtualKeyboard
+from src.web_embed.adblock import enable_adblock
 # from src.debug_logger import debug_logger
 from src.web_embed.web_view import WebAppWidget
 from src.widget_config import WIDGET_WIDTH, WIDGET_HEIGHT
@@ -92,6 +93,7 @@ class MoviesWidget(WebAppWidget):
         # Uses WIDGET_WIDTH x WIDGET_HEIGHT from configuration for consistent sizing
         self.web_view.setMinimumSize(QSize(WIDGET_WIDTH, WIDGET_HEIGHT))
         web_layout.addWidget(self.web_view)
+        enable_adblock(self.web_view, target="auto")
         
         # Add virtual keyboard
         self.keyboard = VirtualKeyboard(self)

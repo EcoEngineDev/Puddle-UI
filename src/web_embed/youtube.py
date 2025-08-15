@@ -3,23 +3,13 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineS
 from PyQt5.QtCore import QUrl, QSize, Qt
 from src.keyboard import VirtualKeyboard
 from src.web_embed.web_view import WebAppWidget
+from src.web_embed.adblock import enable_adblock
 
-class YouTubePage(QWebEnginePage):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        # Enable touch-friendly settings
-        settings = self.settings()
-        settings.setAttribute(QWebEngineSettings.JavascriptEnabled, True)
-        settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
-        settings.setAttribute(QWebEngineSettings.PluginsEnabled, True)
-        settings.setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
-        # Set touch-optimized defaults
-        settings.setFontSize(QWebEngineSettings.DefaultFontSize, 16)
-        settings.setFontSize(QWebEngineSettings.MinimumFontSize, 14)
 
 class YouTubeWidget(WebAppWidget):
     def __init__(self, parent=None):
         super().__init__("https://www.youtube.com", parent)
+        enable_adblock(self.web_view, target="youtube")
         
     def handle_key_press(self, key):
         # Handle special keys

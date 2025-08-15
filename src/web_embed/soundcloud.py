@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineSettings, QWebEngineProfile
 from PyQt5.QtCore import QUrl, QSize, Qt
 from src.keyboard import VirtualKeyboard
+from src.web_embed.adblock import enable_adblock
  
 
 class SoundCloudPage(QWebEnginePage):
@@ -65,6 +66,7 @@ class SoundCloudWidget(QWidget):
         self.web_view.setUrl(QUrl(self.default_url))
         self.web_view.setMinimumSize(QSize(1280, 768))
         web_layout.addWidget(self.web_view)
+        enable_adblock(self.web_view, target="auto")
         
         # Add virtual keyboard
         self.keyboard = VirtualKeyboard(self)
