@@ -50,6 +50,7 @@ from src.web_embed.mini_map import MiniMapWidget
 from src.web_embed.manager import web_embed_manager
 from src.boot_animation import BootAnimation
 from src.clock_widget import ClockWidget, TimeOnlyWidget, DateOnlyWidget
+from src.ytmusic_mini_player import YouTubeMusicMiniPlayer
 
 class EntertainmentMenu(QWidget):
     def __init__(self, parent=None):
@@ -252,6 +253,10 @@ class MainUI(QWidget):
         # Add the same maps_widget to the minimap container (will be reparented/moved as needed)
         # By default, show the minimap as hidden
         self.minimap_container.hide()
+
+        self.ytmusic_mini_player = YouTubeMusicMiniPlayer(self.youtube_music_widget)
+        self.ytmusic_mini_player.setFixedSize(MINIMAP_SIZE, 92)
+        speedometer_layout.addWidget(self.ytmusic_mini_player)
         speedometer_layout.addWidget(self.minimap_container)
 
         # Connect entertainment buttons
