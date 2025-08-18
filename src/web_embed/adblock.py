@@ -128,3 +128,4 @@ def enable_adblock(view, target="youtube"):
         setattr(view, "_adblock_enabled", True)
     except Exception:
         pass
+

@@ -66,7 +66,7 @@ class YouTubeMusicWidget(QWidget):
         self.web_view.setUrl(QUrl(self.default_url))
         self.web_view.setMinimumSize(QSize(1280, 768))
         web_layout.addWidget(self.web_view)
-        enable_adblock(self.web_view, target="auto")
+        enable_adblock(self.web_view, target="network_only")
         
         # Add virtual keyboard
         self.keyboard = VirtualKeyboard(self)

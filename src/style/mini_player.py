@@ -28,3 +28,13 @@ def mini_player_button_style() -> str:
         f"QPushButton:pressed{{background:#0d0d0d;border-color:{theme.COLOR_ACCENT};}}"
     )
 
+
+def mini_player_slider_style() -> str:
+    return (
+        "QSlider::groove:horizontal{height:6px;background:#333;border-radius:3px;margin:8px 10px;}"
+        f"QSlider::sub-page:horizontal{{background:{theme.COLOR_ACCENT};border-radius:3px;}}"
+        "QSlider::add-page:horizontal{background:#222;border-radius:3px;}"
+        f"QSlider::handle:horizontal{{background:{theme.COLOR_TEXT};border:1px solid {theme.COLOR_PANEL_BORDER};"
+        "width:14px;height:14px;margin:-7px -7px;-qt-background-role:dark;border-radius:7px;}}"
+        f"QSlider::handle:horizontal:hover{{background:{theme.COLOR_ACCENT};}}"
+    )

@@ -255,7 +255,7 @@ class MainUI(QWidget):
         self.minimap_container.hide()
 
         self.ytmusic_mini_player = YouTubeMusicMiniPlayer(self.youtube_music_widget)
-        self.ytmusic_mini_player.setFixedSize(MINIMAP_SIZE, 92)
+        self.ytmusic_mini_player.setFixedSize(MINIMAP_SIZE, 120)
         speedometer_layout.addWidget(self.ytmusic_mini_player)
         speedometer_layout.addWidget(self.minimap_container)
 

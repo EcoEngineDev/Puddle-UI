@@ -1,5 +1,5 @@
 import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QPushButton, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QFrame, QPushButton, QLabel, QSlider
 from PyQt5.QtCore import Qt, QSize, QTimer, QRectF
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QColor
 from PyQt5.QtSvg import QSvgRenderer
@@ -8,6 +8,7 @@ from src.style.mini_player import (
     mini_player_title_style,
     mini_player_separator_style,
     mini_player_button_style,
+    mini_player_slider_style,
 )
 
 
@@ -62,11 +63,23 @@ class YouTubeMusicMiniPlayer(QWidget):
         controls.addWidget(self.btn_next)
         controls.addStretch(1)
         layout.addLayout(controls)
+        layout.addSpacing(4)
 
         self._load_icons()
         self.btn_prev.setIcon(self.icon_prev)
         self.btn_next.setIcon(self.icon_next)
         self.btn_playpause.setIcon(self.icon_play)
+
+        # Progress slider below controls
+        self.slider = QSlider(Qt.Horizontal, container)
+        self.slider.setRange(0, 1000)
+        self.slider.setValue(0)
+        self.slider.setStyleSheet(mini_player_slider_style())
+        layout.addWidget(self.slider)
+        self._seeking = False
+        self.slider.sliderPressed.connect(lambda: setattr(self, '_seeking', True))
+        self.slider.sliderReleased.connect(self._on_seek_released)
+        self.slider.sliderMoved.connect(self._on_slider_moved)
 
     def _wire_controls(self):
         self.btn_prev.clicked.connect(self.youtube_music_prev)
@@ -75,7 +88,7 @@ class YouTubeMusicMiniPlayer(QWidget):
 
     def _start_status_timer(self):
         self.status_timer = QTimer(self)
-        self.status_timer.setInterval(1500)
+        self.status_timer.setInterval(700)
         self.status_timer.timeout.connect(self.update_youtube_music_status)
         self.status_timer.start()
 
@@ -152,6 +165,7 @@ class YouTubeMusicMiniPlayer(QWidget):
     def update_youtube_music_status(self):
         js = (
             "(function(){\n"
+            "  function api(){ var app=document.querySelector('ytmusic-app'); return app && (app.playerApi||app.playerApi_); }\n"
             "  function getTitle(){\n"
             "    var bar=document.querySelector('ytmusic-player-bar');\n"
             "    var tEl = (bar && (bar.querySelector('.title') || bar.querySelector('#song-title'))) ||\n"
@@ -163,11 +177,22 @@ class YouTubeMusicMiniPlayer(QWidget):
             "    var btn = document.querySelector('ytmusic-player-bar #play-pause-button') ||\n"
             "              document.querySelector('#left-controls #play-pause-button') ||\n"
             "              document.querySelector('tp-yt-paper-icon-button#play-pause-button');\n"
-            "    if(!btn) return null;\n"
+            "    if(!btn) return 'paused';\n"
             "    var t = btn.getAttribute('title') || btn.getAttribute('aria-label') || '';\n"
             "    return (/pause/i.test(t)) ? 'playing' : 'paused';\n"
             "  }\n"
-            "  return {title:getTitle(), state:getState()};\n"
+            "  function getProgress(){\n"
+            "    var p=api(); var cur=0,dur=0;\n"
+            "    if(p){\n"
+            "      try{ if(p.getCurrentTime) cur=p.getCurrentTime(); }catch(e){}\n"
+            "      try{ if(p.getDuration) dur=p.getDuration(); }catch(e){}\n"
+            "      if((!cur||!dur) && p.getProgressState){ try{ var s=p.getProgressState(); if(s){cur=s.current||s.currentTime||0; dur=s.duration||s.total||0;} }catch(e){} }\n"
+            "    }\n"
+            "    if(!dur){ var a=document.querySelector('audio'); if(a){ cur=a.currentTime||0; dur=a.duration||0; } }\n"
+            "    return {cur:cur, dur:dur};\n"
+            "  }\n"
+            "  var pr=getProgress();\n"
+            "  return {title:getTitle(), state:getState(), cur:pr.cur, dur:pr.dur};\n"
             "})()"
         )
 
@@ -188,10 +213,53 @@ class YouTubeMusicMiniPlayer(QWidget):
                 self.lbl_now_playing.setText(title)
 
                 self.btn_playpause.setIcon(self.icon_pause if state == 'playing' else self.icon_play)
+
+                # Slider update
+                cur = float(status.get('cur') or 0)
+                dur = float(status.get('dur') or 0)
+                if not self._seeking and dur > 0:
+                    val = int(max(0, min(1000, (cur / dur) * 1000)))
+                    self.slider.setValue(val)
             except Exception:
                 pass
 
         self._ytmusic_run_js(js, _apply)
+
+    def _on_slider_moved(self, val: int):
+        # Reserved for future preview display
+        pass
+
+    def _on_seek_released(self):
+        try:
+            val = self.slider.value()
+            def _seek_with_duration(d):
+                try:
+                    dur = float((d or {}).get('dur') or 0)
+                    if dur > 0:
+                        sec = max(0.0, min(dur, (val / 1000.0) * dur))
+                        js = (
+                            "(function(sec){\n"
+                            "  function api(){ var app=document.querySelector('ytmusic-app'); return app && (app.playerApi||app.playerApi_); }\n"
+                            "  var p=api();\n"
+                            "  if(p && p.seekTo){ p.seekTo(sec,true); return 'api.seekTo'; }\n"
+                            "  if(p && p.seek){ p.seek(sec); return 'api.seek'; }\n"
+                            "  var a=document.querySelector('audio'); if(a){ a.currentTime=sec; return 'audio'; }\n"
+                            "  return 'none';\n"
+                            "})(" + str(sec) + ")"
+                        )
+                        self._ytmusic_run_js(js)
+                finally:
+                    self._seeking = False
+
+            # Get duration quickly
+            status_js = (
+                "(function(){ var a=document.querySelector('audio'); var d=a&&a.duration||0;"
+                " var p=document.querySelector('ytmusic-app'); p=p&&(p.playerApi||p.playerApi_);"
+                " try{ if(p&&p.getDuration) d=p.getDuration(); }catch(e){} return {dur:d||0}; })()"
+            )
+            self._ytmusic_run_js(status_js, _seek_with_duration)
+        except Exception:
+            self._seeking = False
 
 
     def _svg_icon(self, path: str, size: int = 20) -> QIcon:
