@@ -215,6 +215,7 @@ function init() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: INITIAL_LAT, lng: INITIAL_LNG },
     zoom: 18,
+    minZoom: 5,
     gestureHandling: "greedy",
     mapId: MAP_ID,
   });
