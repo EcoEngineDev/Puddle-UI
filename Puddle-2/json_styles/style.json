@@ -1,0 +1,25 @@
+{
+  "name": "custom",
+  "colors": {
+    "background": "#120c08",
+    "surface_gradient_start": "#1b110b",
+    "surface_gradient_mid": "#21160f",
+    "surface_gradient_end": "#160d09",
+    "card_gradient_start": "#20140d",
+    "card_gradient_mid": "#261a12",
+    "card_gradient_end": "#18100b",
+    "mini_gradient_start": "#271711",
+    "mini_gradient_mid": "#321f18",
+    "mini_gradient_end": "#1f120d",
+    "primary": "#d47a2d",
+    "status_text": "#f3a562",
+    "text_primary": "#f3e1ce",
+    "text_muted": "rgba(243, 209, 170, 0.78)",
+    "text_soft": "rgba(243, 209, 170, 0.62)",
+    "tube_primary": "#ff9346",
+    "tube_primary_hover": "#ffa565",
+    "tube_primary_active": "#e4833e",
+    "tube_surface": "#1f1410",
+    "tube_surface_alt": "#2a1a12"
+  }
+}

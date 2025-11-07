@@ -1,0 +1,17 @@
+services:
+  puddle2:
+    devices:
+      - ${ALSA_DEVICE_PATH:-/dev/snd}:/dev/snd
+    group_add:
+      - audio
+    environment:
+      - QT_MULTIMEDIA_PREFERRED_PLUGINS=${QT_MULTIMEDIA_PREFERRED_PLUGINS:-alsa}
+      - GST_AUDIO_SINK=${GST_AUDIO_SINK:-alsasink}
+      - PULSE_SERVER=
+      - PULSE_CONTAINER_SOCKET=
+      - PULSE_CLIENTCONFIG=
+      - PULSE_LOG=
+      - GST_PIPEWIRE_REMOTE=
+      - PIPEWIRE_REMOTE=
+      - PIPEWIRE_RUNTIME_DIR=
+      - GST_PLUGIN_FEATURE_RANK=

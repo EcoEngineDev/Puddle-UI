@@ -1,0 +1,45 @@
+services:
+  puddle2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash ./scripts/start-dev.sh
+    working_dir: /workspace
+    user: "${DEV_UID:-0}:${DEV_GID:-0}"
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - HOME=/workspace
+      - XAUTHORITY=/workspace/.Xauthority
+      - QT_X11_NO_MITSHM=1
+      - LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+      - QT_QUICK_BACKEND=${QT_QUICK_BACKEND:-software}
+      - QTWEBENGINE_CHROMIUM_FLAGS=${QTWEBENGINE_CHROMIUM_FLAGS:---no-sandbox --disable-gpu --disable-software-rasterizer}
+      - PYTHONPATH=/workspace/src
+      - YTMUSIC_AUTH_FILE=/workspace/.secrets/ytmusic_oauth_user.json
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/tmp/puddle2-runtime}
+      - PULSE_CONTAINER_SOCKET=${PULSE_CONTAINER_SOCKET:-/tmp/pulseaudio-bridge/native}
+      - PULSE_SERVER=${PULSE_SERVER:-unix:${PULSE_CONTAINER_SOCKET:-/tmp/pulseaudio-bridge/native}}
+      - PULSE_CLIENTCONFIG=${PULSE_CLIENTCONFIG:-}
+      - PULSE_LOG=${PULSE_LOG:-}
+      - PIPEWIRE_RUNTIME_DIR=${PIPEWIRE_RUNTIME_DIR_CONTAINER:-/tmp/pipewire-bridge}
+      - PIPEWIRE_REMOTE=${PIPEWIRE_REMOTE:-unix:/tmp/pipewire-bridge/pipewire-0}
+      - GST_PIPEWIRE_REMOTE=${GST_PIPEWIRE_REMOTE:-unix:/tmp/pipewire-bridge/pipewire-0}
+      - GST_PLUGIN_FEATURE_RANK=${GST_PLUGIN_FEATURE_RANK:-pipewiresink:33000,pulsesink:0}
+      - GST_AUDIO_SINK=${GST_AUDIO_SINK:-pipewiresink}
+    volumes:
+      - .:/workspace:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/workspace/.Xauthority:ro
+      - ${PULSE_SOCKET:-/tmp/puddle2-runtime/pulse/native}:${PULSE_CONTAINER_SOCKET:-/tmp/pulseaudio-bridge/native}:rw
+      - ${PULSE_COOKIE:-/dev/null}:${PULSE_COOKIE_CONTAINER:-/tmp/pulseaudio-bridge/cookie}:ro
+      - /etc/passwd:/etc/passwd:ro
+      - type: bind
+        source: ${PIPEWIRE_SOCKET:-/tmp/pipewire-host/pipewire-0}
+        target: /tmp/pipewire-bridge/pipewire-0
+        read_only: true
+      - /var/run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+    stdin_open: true
+    tty: true
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8

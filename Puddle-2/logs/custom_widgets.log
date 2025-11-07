@@ -1,0 +1,317 @@
+# Custom Widgets CLI log placeholder.
+# Run tooling inside Docker to populate this file.
+2025-11-06 19:32:34,679 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-06 19:32:34,679 - WARNING - OAuth credential file /home/dylanchenzhen/Puddle-UI/Puddle-2/.secrets/ytmusic_oauth.json missing required fields: client_id, client_secret
+2025-11-06 19:32:34,685 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 00:33:40,497 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 00:33:40,497 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 00:33:40,514 - WARNING - No audio output devices detected. Configure host audio forwarding, mount the PipeWire socket, or run with the ALSA override to expose /dev/snd.
+2025-11-07 00:33:58,315 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 00:33:59,057 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 00:34:00,038 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 00:34:00,067 - ERROR - Failed to start playback: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 695, in _play_track
+    self.backend.play_track(track)
+  File "/workspace/src/ytmusic_backend.py", line 125, in play_track
+    raise RuntimeError(
+RuntimeError: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+2025-11-07 00:57:32,131 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 00:57:32,131 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 00:57:32,146 - WARNING - No audio output devices detected. Configure host audio forwarding, mount the PipeWire socket, or run with the ALSA override to expose /dev/snd.
+2025-11-07 01:06:52,881 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:06:52,882 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:06:52,908 - WARNING - No audio output devices detected. Configure host audio forwarding, mount the PipeWire socket, or run with the ALSA override to expose /dev/snd.
+2025-11-07 01:07:03,482 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:07:03,483 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:07:03,500 - WARNING - No audio output devices detected. Configure host audio forwarding, mount the PipeWire socket, or run with the ALSA override to expose /dev/snd.
+2025-11-07 01:07:40,653 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:07:40,653 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:07:40,666 - WARNING - No audio output devices detected. Configure host audio forwarding, mount the PipeWire socket, or run with the ALSA override to expose /dev/snd.
+2025-11-07 01:08:33,206 - ERROR - Failed to start playback: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 695, in _play_track
+    self.backend.play_track(track)
+  File "/workspace/src/ytmusic_backend.py", line 125, in play_track
+    raise RuntimeError(
+RuntimeError: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+2025-11-07 01:08:39,938 - ERROR - Failed to start playback: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 695, in _play_track
+    self.backend.play_track(track)
+  File "/workspace/src/ytmusic_backend.py", line 125, in play_track
+    raise RuntimeError(
+RuntimeError: No audio output device detected. Enable PulseAudio/PipeWire forwarding, attach a sound device to the container, or start Docker with the ALSA override.
+2025-11-07 01:39:43,794 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:39:43,795 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:39:43,813 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 01:39:59,440 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 01:39:59,914 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 01:40:00,983 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 01:41:53,585 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:41:53,586 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:41:53,607 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 01:42:43,660 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,661 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:43,662 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:42:46,242 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 01:42:46,243 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 698, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 835, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 831, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 01:54:54,803 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:54:54,803 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:54:54,823 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 01:56:26,329 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:26,330 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 01:56:30,386 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 01:56:30,387 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 764, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 901, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 897, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 01:57:05,670 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:57:05,671 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:57:05,701 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 01:57:09,113 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 01:57:09,265 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 01:57:10,483 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 01:59:00,711 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 01:59:00,711 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 01:59:00,728 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 01:59:25,849 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 01:59:56,010 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 01:59:57,093 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:02:08,253 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:08,254 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:08,280 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:02:14,983 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:14,983 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:15,012 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:02:22,942 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:22,942 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:22,964 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:02:28,256 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:28,256 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:28,276 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:02:37,505 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:37,505 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:37,523 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:02:42,929 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:02:42,929 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:02:42,956 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:10:44,469 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:10:44,613 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:10:45,505 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:24:29,619 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:24:29,620 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:24:29,648 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:24:37,876 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:24:38,027 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:24:39,055 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:25:48,372 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 02:25:48,373 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 784, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 921, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 917, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 02:27:54,491 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:27:54,492 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:27:54,516 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:28:07,758 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:28:07,898 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:28:09,075 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:28:11,847 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,847 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,847 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,847 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:11,848 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:28:15,443 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 02:28:15,444 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 785, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 922, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 918, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 02:48:16,381 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:48:16,382 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:48:16,410 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:48:21,926 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:48:22,106 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:48:22,949 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:48:26,241 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:26,242 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:48:28,701 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 02:48:28,702 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 798, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 954, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 950, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 02:49:16,810 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:49:16,811 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:49:16,836 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:49:24,240 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:49:24,416 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:49:25,202 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:51:38,918 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 02:51:38,919 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 798, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 954, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 950, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 02:52:54,123 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:52:54,123 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:52:54,139 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:52:59,508 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:52:59,509 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:52:59,528 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:53:10,750 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:53:10,751 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:53:10,773 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:53:18,211 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:53:18,212 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:53:18,231 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:54:05,300 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:54:05,445 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:54:06,502 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:54:41,695 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 02:54:41,695 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 02:54:41,719 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 02:54:46,597 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 02:54:46,734 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 02:54:47,566 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:50,945 - DEBUG - Queue icon download failed: Operation canceled
+2025-11-07 02:54:53,343 - DEBUG - Album art download failed: Operation canceled
+2025-11-07 02:54:53,343 - ERROR - Failed to start playback: 'NoneType' object has no attribute 'deleteLater'
+Traceback (most recent call last):
+  File "/workspace/src/mini_player.py", line 800, in _play_track
+    self._update_album_art(track.image_url)
+  File "/workspace/src/mini_player.py", line 969, in _update_album_art
+    self._cancel_album_request()
+  File "/workspace/src/mini_player.py", line 965, in _cancel_album_request
+    self._album_reply.deleteLater()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'deleteLater'
+2025-11-07 03:01:52,508 - WARNING - YTMusic client initialisation with auth file failed (oauth JSON provided via auth argument, but oauth_credentials not provided.Please provide oauth_credentials as specified in the OAuth setup documentation.); attempting manual OAuth credential fallback.
+2025-11-07 03:01:52,508 - WARNING - OAuth credential load failed (RefreshingToken.__init__() got an unexpected keyword argument 'client_id'); continuing without authentication.
+2025-11-07 03:01:52,533 - INFO - Audio output device ready: Built-in Audio Analog Stereo
+2025-11-07 03:02:14,385 - DEBUG - Starting new HTTPS connection (1): music.youtube.com:443
+2025-11-07 03:02:14,529 - DEBUG - https://music.youtube.com:443 "GET / HTTP/1.1" 200 None
+2025-11-07 03:02:15,378 - DEBUG - https://music.youtube.com:443 "POST /youtubei/v1/search?alt=json HTTP/1.1" 200 None

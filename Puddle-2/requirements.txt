@@ -1,0 +1,14 @@
+# Qt runtime
+PyQt6==6.7.0
+PyQt6-WebEngine==6.7.0
+
+# Hot-reload + file watching
+watchdog[watchmedo]==3.0.0
+
+# Custom Widgets stack
+QT-PyQt-PySide-Custom-Widgets>=0.6.9
+perlin-noise>=1.12
+
+# Playback + streaming
+ytmusicapi>=1.6.1
+yt-dlp>=2024.8.6
